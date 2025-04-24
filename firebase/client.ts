@@ -17,6 +17,17 @@ console.log('Firebase Environment Variables:', {
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID ? 'Present' : 'Missing'
 });
 
+// Verify environment variables
+if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
+    console.error('FIREBASE_API_KEY is missing');
+}
+if (!process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN) {
+    console.error('FIREBASE_AUTH_DOMAIN is missing');
+}
+if (!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) {
+    console.error('FIREBASE_PROJECT_ID is missing');
+}
+
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -30,7 +41,14 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+let app;
+try {
+    app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+    console.log('Firebase initialized successfully');
+} catch (error) {
+    console.error('Firebase initialization error:', error);
+    throw error;
+}
 // const analytics = getAnalytics(app);
 
 export const auth = getAuth(app);
